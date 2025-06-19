@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Sentiment App</title>
+</head>
+<body>
+    <h1>💬 AI Sentiment Analyzer</h1>
+
+    <!-- 💬 User Input Form -->
+    <form method="POST">
+        <textarea name="user_text" placeholder="Type here..." required></textarea><br>
+        <button type="submit">Analyze</button>
+    </form>
+
+    <!-- ✅ Show Result if Available -->
+    {% if result is defined %}
+        <h2>Prediction: {{ result }}</h2>
+
+        <!-- 👍👎 Feedback Buttons Form -->
+        <form method="POST" action="/feedback">
+            <!-- Hidden fields to send back original input and prediction -->
+            <input type="hidden" name="original_text" value="{{ text }}">
+            <input type="hidden" name="predicted_label" value="{{ 1 if result == '😊 Positive' else 0 }}">
+
+            <p>Was this prediction correct?</p>
+            <button type="submit" name="feedback" value="yes">👍 Yes</button>
+            <button type="submit" name="feedback" value="no">👎 No</button>
+        </form>
+    {% endif %}
+
+    <!-- 📢 Optional: Show Confirmation Message After Feedback -->
+    {% if message %}
+        <div class="result">
+            <p>{{ message }}</p>
+        </div>
+    {% endif %}
+</body>
+</html>
