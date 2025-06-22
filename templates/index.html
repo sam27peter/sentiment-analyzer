@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sentiment Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Sentiment Analysis</h1>
+
+    <!-- 🌐 Input Form -->
+    <form method="POST">
+        <textarea name="user_text" id="user_text" placeholder="Type something or use the mic..."></textarea>
+
+        <div id="liveEmoji">😐</div>
+
+        <button type="submit">Analyze</button>
+        <button type="button" onclick="startSpeech()" style="background-color:#8e44ad;">🎤 Speak</button>
+
+        <!-- 🎨 Theme Toggle -->
+        <button type="button" onclick="toggleDarkMode()" class="toggle-dark" style="margin-top: 15px;">🌓 Change Theme</button>
+    </form>
+
+    <!-- 😃 Prediction Result -->
+    {% if result %}
+    <div class="result {% if result == '🤔 I do not understand' %}uncertain{% endif %}">
+        <p id="typedResult"></p>
+        <p><strong>Input:</strong> {{ text }}</p>
+
+        {% if result != "🤔 I do not understand" %}
+        <!-- 👍👎 Feedback Form -->
+        <form method="POST" action="{{ url_for('feedback') }}">
+            <input type="hidden" name="original_text" value="{{ text }}">
+            <input type="hidden" name="predicted_label" value="{{ 1 if result == '😊 Positive' else 0 }}">
+            <p>Was the Prediction Right?</p>
+            <button type="submit" name="feedback" value="yes">Yes</button>
+            <button type="submit" name="feedback" value="no" class="retrain">No</button>
+        </form>
+        {% else %}
+        <p><strong>Note:</strong> The input was unclear or not understandable. Please try rephrasing.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- 🔁 Retrain Button -->
+    <form method="POST" action="{{ url_for('retrain') }}">
+        <button type="submit" class="retrain">🔁 Retrain Model with Feedback</button>
+    </form>
+
+    <!-- 📜 Scripts -->
+    <script>
+        // 🌙 Dark Mode Toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark");
+            localStorage.setItem("darkMode", document.body.classList.contains("dark"));
+        }
+
+        // 🎙️ Speech-to-Text
+        function startSpeech() {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert("Sorry, your browser doesn't support speech recognition.");
+                return;
+            }
+
+            const recognition = new webkitSpeechRecognition();
+            recognition.lang = "en-US";
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.start();
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById("user_text").value = transcript;
+                document.getElementById("liveEmoji").textContent = "🗣️";
+            };
+
+            recognition.onerror = function(event) {
+                alert("Speech recognition error: " + event.error);
+            };
+        }
+
+        // 😃 Emoji Preview
+        const emojiMap = {
+            happy: "😊", love: "😍", good: "😃", excited: "😁", nice: "😄",
+            sad: "😞", bad: "😠", angry: "😡", hate: "😤", terrible: "😭"
+        };
+
+        document.querySelector('textarea').addEventListener('input', function () {
+            const text = this.value.toLowerCase();
+            let matched = Object.entries(emojiMap).find(([word]) => text.includes(word));
+            document.getElementById("liveEmoji").textContent = matched ? matched[1] : "😐";
+        });
+
+        // ✨ Typing Animation
+        function typeText(el, text, delay = 40) {
+            el.textContent = '';
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    el.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, delay);
+                }
+            }
+            type();
+        }
+
+        // 🧠 On page load
+        window.onload = function () {
+            const result = "{{ result }}";
+            if (document.getElementById("typedResult") && result) {
+                typeText(document.getElementById("typedResult"), "Prediction: " + result);
+            }
+
+            if (localStorage.getItem("darkMode") === "true") {
+                document.body.classList.add("dark");
+            }
+        }
+    </script>
+</body>
+</html>

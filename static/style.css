@@ -1,0 +1,167 @@
+/* 🌐 Base Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 40px;
+    max-width: 700px;
+    margin: auto;
+    color: #333;
+    position: relative;
+}
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+textarea {
+    width: 100%;
+    height: 100px;
+    font-size: 1em;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background-color: #9fba19;
+    transform: scale(1.03);
+}
+
+/* 🎙️ Speech Button */
+button[onclick^="startSpeech"] {
+    background-color: #8e44ad;
+}
+
+.result {
+    margin-top: 20px;
+    padding: 15px;
+    background: white;
+    border-left: 5px solid #2ecc71;
+    border-radius: 5px;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+/* 🔍 Style for uncertain results */
+.result.uncertain {
+    border-left-color: #f1c40f;
+    background-color: #fffbe6;
+    color: #555;
+}
+
+/* 🧾 Forms */
+form {
+    margin-bottom: 20px;
+}
+
+.retrain {
+    background-color: #f39c12;
+    animation: pulse 2s infinite;
+}
+
+.retrain:hover {
+    background-color: #e67e22;
+}
+
+/* 🔁 Animation for fade in */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ✨ Pulse animation for retrain */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(243, 156, 18, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0); }
+}
+
+/* 🌙 Dark Mode */
+body.dark {
+    background-color: #1e1e1e;
+    color: #eee;
+}
+
+body.dark textarea,
+body.dark .result {
+    background-color: #333;
+    color: #eee;
+    border-color: #444;
+}
+
+body.dark button {
+    background-color: #555;
+}
+
+body.dark .retrain {
+    background-color: #c96f0c;
+}
+
+body.dark .result.uncertain {
+    background-color: #3c3c1f;
+    border-left-color: #f1c40f;
+    color: #eee;
+}
+
+/* 🌓 Dark Mode Toggle Button */
+.toggle-dark {
+    background-color: #6c757d;
+    color: #fff;
+    margin-top: 15px;
+}
+
+.toggle-dark:hover {
+    background-color: #5a6268;
+}
+
+/* 😃 Emoji Preview */
+#liveEmoji {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 🧪 Typing animation target */
+#typedResult {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* 📱 Responsive Design */
+@media screen and (max-width: 600px) {
+    body {
+        padding: 20px;
+    }
+
+    textarea {
+        height: 80px;
+    }
+
+    button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .toggle-dark {
+        position: static;
+        display: block;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+}
